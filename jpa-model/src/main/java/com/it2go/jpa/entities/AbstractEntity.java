@@ -10,9 +10,8 @@ import java.io.Serializable;
 
 @MappedSuperclass
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class AbstractEntity<K extends Serializable> implements Serializable {
+public abstract class AbstractEntity<K> implements Serializable {
 
-    //@Id
     public abstract K getId();
 
     public abstract void setId(K k);
