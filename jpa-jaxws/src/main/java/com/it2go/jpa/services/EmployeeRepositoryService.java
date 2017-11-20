@@ -8,6 +8,7 @@ import javax.ejb.Local;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
+import java.util.List;
 
 @WebService
 public interface EmployeeRepositoryService {
@@ -17,4 +18,7 @@ public interface EmployeeRepositoryService {
 
     @WebMethod
     public Employee getEmployeeById(Long id);
+
+    @WebMethod
+    public List<Employee> findAll();
 }

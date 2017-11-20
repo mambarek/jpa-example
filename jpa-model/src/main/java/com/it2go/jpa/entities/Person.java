@@ -35,7 +35,6 @@ import java.util.Objects;
 @Entity
 @Getter
 @Setter
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Table(name = "PERSON")
 public class Person extends DomainEntity{
 
@@ -108,6 +107,6 @@ public class Person extends DomainEntity{
 
     @Override
     public String toString() {
-        return String.format("Person[%s %s]", this.getFirstName(), this.getLastName());
+        return String.format("Person[(%s)%s %s]", this.getId(), this.getFirstName(), this.getLastName());
     }
 }

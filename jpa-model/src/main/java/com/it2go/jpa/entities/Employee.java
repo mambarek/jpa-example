@@ -7,6 +7,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -14,6 +15,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @Entity
+@XmlRootElement
 public class Employee extends Person {
 
     private double salary;
@@ -24,7 +26,7 @@ public class Employee extends Person {
     @Override
     public String toString() {
         Person p = (Person)this;
-        return String.format("Employee[%s %s (%s EUR)]", this.getFirstName(), this.getLastName(), this.getSalary());
+        return String.format("Employee[(%s)%s %s (%s EUR)]",this.getId(), this.getFirstName(), this.getLastName(), this.getSalary());
     }
 
     public void addProject(Project project){

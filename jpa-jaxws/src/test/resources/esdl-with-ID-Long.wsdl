@@ -1,0 +1,185 @@
+<?xml version="1.0" ?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://services.jpa.it2go.com/"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  name="EmployeeRepositoryService" targetNamespace="http://services.jpa.it2go.com/">
+    <wsdl:types>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://services.jpa.it2go.com/"
+                   attributeFormDefault="unqualified" elementFormDefault="unqualified"
+                   targetNamespace="http://services.jpa.it2go.com/">
+            <xs:element name="employee" type="tns:employee"></xs:element>
+            <xs:element name="getEmployeeById" type="tns:getEmployeeById"></xs:element>
+            <xs:element name="getEmployeeByIdResponse" type="tns:getEmployeeByIdResponse"></xs:element>
+            <xs:element name="save" type="tns:save"></xs:element>
+            <xs:element name="saveResponse" type="tns:saveResponse"></xs:element>
+            <xs:complexType name="getEmployeeById">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="arg0" type="xs:long"></xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="getEmployeeByIdResponse">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="return" type="tns:employee"></xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="employee">
+                <xs:complexContent>
+                    <xs:extension base="tns:person">
+                        <xs:sequence>
+                            <xs:element maxOccurs="unbounded" minOccurs="0" name="projects" nillable="true"
+                                        type="tns:project"></xs:element>
+                            <xs:element name="salary" type="xs:double"></xs:element>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+            <xs:complexType name="person">
+                <xs:complexContent>
+                    <xs:extension base="tns:domainEntity">
+                        <xs:sequence>
+                            <xs:element minOccurs="0" name="birthDate" type="xs:dateTime"></xs:element>
+                            <xs:element maxOccurs="unbounded" minOccurs="0" name="children" nillable="true"
+                                        type="tns:person"></xs:element>
+                            <xs:element maxOccurs="unbounded" minOccurs="0" name="emails" nillable="true"
+                                        type="tns:emailAddress"></xs:element>
+                            <xs:element minOccurs="0" name="embeddedEmail" type="tns:emailAddress"></xs:element>
+                            <xs:element minOccurs="0" name="firstName" type="xs:string"></xs:element>
+                            <xs:element minOccurs="0" name="gender" type="tns:gender"></xs:element>
+                            <xs:element minOccurs="0" name="lastName" type="xs:string"></xs:element>
+                            <xs:element minOccurs="0" name="mymail" type="xs:string"></xs:element>
+                            <xs:element maxOccurs="unbounded" minOccurs="0" name="parents" nillable="true"
+                                        type="tns:person"></xs:element>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+            <xs:complexType abstract="true" name="domainEntity">
+                <xs:complexContent>
+                    <xs:extension base="tns:abstractEntity">
+                        <xs:sequence>
+                            <xs:element minOccurs="0" name="createdBy" type="tns:person"></xs:element>
+                            <xs:element minOccurs="0" name="creationDate" type="xs:dateTime"></xs:element>
+                            <xs:element minOccurs="0" name="lastUpdateTime" type="xs:dateTime"></xs:element>
+                            <xs:element minOccurs="0" name="updatedBy" type="tns:person"></xs:element>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+            <xs:complexType abstract="true" name="abstractEntity">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="id" type="xs:long"></xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="project">
+                <xs:complexContent>
+                    <xs:extension base="tns:domainEntity">
+                        <xs:sequence>
+                            <xs:element minOccurs="0" name="begin" type="xs:dateTime"></xs:element>
+                            <xs:element name="budget" type="xs:double"></xs:element>
+                            <xs:element minOccurs="0" name="employee" type="tns:employee"></xs:element>
+                            <xs:element minOccurs="0" name="end" type="xs:dateTime"></xs:element>
+                            <xs:element minOccurs="0" name="name" type="xs:string"></xs:element>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+            <xs:complexType name="emailAddress">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="email" type="xs:string"></xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="save">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="arg0" type="tns:employee"></xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="saveResponse">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="return" type="tns:employee"></xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:simpleType name="gender">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="male"></xs:enumeration>
+                    <xs:enumeration value="female"></xs:enumeration>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:element name="EntityRemovedException" type="tns:EntityRemovedException"></xs:element>
+            <xs:complexType name="EntityRemovedException">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="message" type="xs:string"></xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="EntityConcurrentModificationException"
+                        type="tns:EntityConcurrentModificationException"></xs:element>
+            <xs:complexType name="EntityConcurrentModificationException">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="message" type="xs:string"></xs:element>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="saveResponse">
+        <wsdl:part element="tns:saveResponse" name="parameters"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="EntityConcurrentModificationException">
+        <wsdl:part element="tns:EntityConcurrentModificationException"
+                   name="EntityConcurrentModificationException"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="save">
+        <wsdl:part element="tns:save" name="parameters"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="EntityRemovedException">
+        <wsdl:part element="tns:EntityRemovedException" name="EntityRemovedException"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="getEmployeeById">
+        <wsdl:part element="tns:getEmployeeById" name="parameters"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="getEmployeeByIdResponse">
+        <wsdl:part element="tns:getEmployeeByIdResponse" name="parameters"></wsdl:part>
+    </wsdl:message>
+    <wsdl:portType name="EmployeeRepositoryService">
+        <wsdl:operation name="getEmployeeById">
+            <wsdl:input message="tns:getEmployeeById" name="getEmployeeById"></wsdl:input>
+            <wsdl:output message="tns:getEmployeeByIdResponse" name="getEmployeeByIdResponse"></wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="save">
+            <wsdl:input message="tns:save" name="save"></wsdl:input>
+            <wsdl:output message="tns:saveResponse" name="saveResponse"></wsdl:output>
+            <wsdl:fault message="tns:EntityRemovedException" name="EntityRemovedException"></wsdl:fault>
+            <wsdl:fault message="tns:EntityConcurrentModificationException"
+                        name="EntityConcurrentModificationException"></wsdl:fault>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="EmployeeRepositoryServiceSoapBinding" type="tns:EmployeeRepositoryService">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"></soap:binding>
+        <wsdl:operation name="getEmployeeById">
+            <soap:operation soapAction="" style="document"></soap:operation>
+            <wsdl:input name="getEmployeeById">
+                <soap:body use="literal"></soap:body>
+            </wsdl:input>
+            <wsdl:output name="getEmployeeByIdResponse">
+                <soap:body use="literal"></soap:body>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="save">
+            <soap:operation soapAction="" style="document"></soap:operation>
+            <wsdl:input name="save">
+                <soap:body use="literal"></soap:body>
+            </wsdl:input>
+            <wsdl:output name="saveResponse">
+                <soap:body use="literal"></soap:body>
+            </wsdl:output>
+            <wsdl:fault name="EntityRemovedException">
+                <soap:fault name="EntityRemovedException" use="literal"></soap:fault>
+            </wsdl:fault>
+            <wsdl:fault name="EntityConcurrentModificationException">
+                <soap:fault name="EntityConcurrentModificationException" use="literal"></soap:fault>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="EmployeeRepositoryService">
+        <wsdl:port binding="tns:EmployeeRepositoryServiceSoapBinding" name="EmployeeRepositoryServiceImplPort">
+            <soap:address location="http://localhost:8080/test/EmployeeRepositoryService"></soap:address>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

@@ -29,6 +29,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.List;
 
 //@Ignore
 @RunWith(Arquillian.class)
@@ -37,7 +38,7 @@ public class EmployeeRepositoryServiceTest {
 
     EmployeeRepositoryService service;
 
-    @Deployment
+    @Deployment(testable = true)
     public static Archive<?> createDeployment() {
 
         // get all maven dependecies
@@ -60,8 +61,27 @@ public class EmployeeRepositoryServiceTest {
     }
 
     @ArquillianResource
-    URL deploymentURL;
+    private URL deploymentURL;
 
+    private EmployeeRepositoryService getEmployeeService(){
+        String uri = deploymentURL.toString();
+        String serviceWSDL =  uri + "EmployeeRepositoryService?wsdl";
+        final QName serviceName
+                = new QName("http://services.jpa.it2go.com/", "EmployeeRepositoryService");
+        final QName portName
+                = new QName("http://services.jpa.it2go.com/", "EmployeeRepositoryServiceImplPort");
+
+        Service service = null;
+        try {
+            service = Service.create(new URL(serviceWSDL), serviceName);
+            return service.getPort(EmployeeRepositoryService.class);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        //EmployeeRepositoryService employeeRepositoryService = service.getPort(portName, EmployeeRepositoryService.class);
+       return null;
+    }
     @Test
     public void test(){
         System.out.println("Hello from EmployeeRepositoryServiceTest!!!!!!!!");
@@ -92,18 +112,11 @@ public class EmployeeRepositoryServiceTest {
     }
 
     @Test
-    @RunAsClient
+    //@RunAsClient
     public void test00() throws MalformedURLException {
-        String uri = "http://localhost:8080/test/"; //deploymentURL.toString()
-        String serviceWSDL =  uri + "EmployeeRepositoryService?wsdl";
-        final QName serviceName
-                = new QName(uri, "EmployeeRepositoryService");
-        final QName portName
-                = new QName(uri, "EmployeeRepositoryServiceImplPort");
 
-        Service service = Service.create(new URL(serviceWSDL), serviceName);
-
-        EmployeeRepositoryService employeeRepositoryService = service.getPort(serviceName, EmployeeRepositoryService.class);
+        //EmployeeRepositoryService employeeRepositoryService = service.getPort(portName, EmployeeRepositoryService.class);
+        EmployeeRepositoryService employeeRepositoryService = this.getEmployeeService();
         Employee employee = new Employee();
         employee.setFirstName("xxx");
         employee.setLastName("yyy");
@@ -119,5 +132,33 @@ public class EmployeeRepositoryServiceTest {
         }
 
         System.out.println(">>>> res = " + res);
+    }
+
+    @Test
+    public void test01(){
+        EmployeeRepositoryService employeeRepositoryService = this.getEmployeeService();
+        final Employee employeeById = employeeRepositoryService.getEmployeeById(1L);
+        System.out.println("employeeById = " + employeeById);
+    }
+
+    @Test
+    public void test02(){
+        EmployeeRepositoryService employeeRepositoryService = this.getEmployeeService();
+        Employee employee = new Employee();
+        employee.setFirstName("John");
+        employee.setLastName("Braun");
+        employee.setSalary(3500);
+
+        try {
+            employeeRepositoryService.save(employee);
+        } catch (EntityConcurrentModificationException e) {
+            e.printStackTrace();
+        } catch (EntityRemovedException e) {
+            e.printStackTrace();
+        }
+
+        final List<Employee> employees = employeeRepositoryService.findAll();
+        System.out.println("-- Print all Employees");
+        employees.forEach(System.out::println);
     }
 }
